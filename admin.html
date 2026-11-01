@@ -34,13 +34,13 @@ button.g{background:#fff;border:1px solid var(--line)}button.d{background:#fff;b
 <button id="save">Saqlash</button> <button class="g" id="cancel">Bekor</button><p id="fm"></p></div>
 <div id="list"></div></div></div>
 <script>
-var SUPABASE_URL="https://dxbiirdaqzcrggauuhkp.supabase.co",SUPABASE_KEY="sb_publishable_dNz6wAemrqDSO2l_ZlHh9A_RHqavPhE";
+var SUPABASE_URL="SHU_YERGA_URL",SUPABASE_KEY="SHU_YERGA_ANON_KEY";
 var $=function(i){return document.getElementById(i)},editId=null,cur="",rows=[],sb=null;
 try{sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY)}catch(e){$("msg").textContent="Supabase URL/kalit noto‘g‘ri qo‘yilgan yoki internet yo‘q: "+e.message}
 function esc(x){return String(x==null?"":x).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
 function show(a){$("login").classList.toggle("hide",a);$("app").classList.toggle("hide",!a);if(a)load()}
 if(sb)sb.auth.getSession().then(function(r){show(!!r.data.session)}).catch(function(e){$("msg").textContent="Ulanishda xato: "+e.message});
-$("go").onclick=function(){sb.auth.signInWithPassword({email:$("em").value.trim(),password:$("pw").value}).then(function(r){if(r.error)$("msg").textContent="Email yoki parol noto‘g‘ri";else show(true)})};
+$("go").onclick=function(){sb.auth.signInWithPassword({email:$("em").value.trim(),password:$("pw").value}).then(function(r){if(r.error)$("msg").textContent="Xato: "+r.error.message;else show(true)})};
 $("out").onclick=function(){sb.auth.signOut().then(function(){show(false)})};
 function load(){sb.from("bouquets").select("*").order("sort_order").order("id").then(function(r){rows=r.data||[];
 $("list").innerHTML=rows.map(function(p){return '<div class="card">'+(p.image_url?'<img src="'+esc(p.image_url)+'">':'<div class="ph"></div>')+'<div class="i"><b>'+esc(p.name)+'</b>'+p.price.toLocaleString("ru-RU")+' so‘m<div class="tag">'+(p.active?"Saytda bor":"Yashirin")+' · '+(p.in_stock?"mavjud":"tugagan")+'</div><div class="acts"><button class="g" onclick="edit('+p.id+')">Tahrirlash</button><button class="g" onclick="tog('+p.id+',\'in_stock\')">'+(p.in_stock?"Tugadi":"Mavjud")+'</button><button class="d" onclick="del('+p.id+')">O‘chirish</button></div></div></div>'}).join("")||"<p>Hali buket yo‘q</p>"})}
