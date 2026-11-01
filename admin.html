@@ -34,7 +34,7 @@ button.g{background:#fff;border:1px solid var(--line)}button.d{background:#fff;b
 <button id="save">Saqlash</button> <button class="g" id="cancel">Bekor</button><p id="fm"></p></div>
 <div id="list"></div></div></div>
 <script>
-var SUPABASE_URL="SHU_YERGA_URL",SUPABASE_KEY="SHU_YERGA_ANON_KEY";
+var SUPABASE_URL="https://dxbiirdaqzcrggauuhkp.supabase.co",SUPABASE_KEY="sb_publishable_dNz6wAemrqDSO2l_ZlHh9A_RHqavPhE";
 var $=function(i){return document.getElementById(i)},editId=null,cur="",rows=[],sb=null;
 try{sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY)}catch(e){$("msg").textContent="Supabase URL/kalit noto‘g‘ri qo‘yilgan yoki internet yo‘q: "+e.message}
 function esc(x){return String(x==null?"":x).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
