@@ -234,7 +234,7 @@ if(/^https?:/.test(SB_URL)){
  var KEY="novaa_catalog_v1",saved=null;
  try{var raw=JSON.parse(localStorage.getItem(KEY)||"null");if(Array.isArray(raw))saved=raw}catch(e){}
  if(saved){P=saved;draw()}else document.getElementById("grid").innerHTML='<p class="empty">Yuklanmoqda…</p>';
- fetch(SB_URL+"/rest/v1/bouquets?select=*&active=eq.true&order=sort_order.asc,id.asc",{cache:"no-store",headers:{apikey:SB_KEY,Authorization:"Bearer "+SB_KEY}})
+ fetch(SB_URL+"/rest/v1/bouquets?select=*&active=eq.true&order=sort_order.asc,id.asc",{cache:"no-store",headers:SB_KEY.indexOf("sb_")===0?{apikey:SB_KEY}:{apikey:SB_KEY,Authorization:"Bearer "+SB_KEY}})
  .then(function(r){if(!r.ok)throw new Error(r.status);return r.json()})
  .then(function(rows){
   var fresh=fromDB(rows),same=saved&&JSON.stringify(saved)===JSON.stringify(fresh);
