@@ -1,65 +1,286 @@
 <!DOCTYPE html>
-<html lang="uz"><head><meta charset="utf-8">
+<html lang="uz" style="color-scheme:light"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light">
 <meta name="robots" content="noindex"><title>Novaa Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600&family=Figtree:wght@400;500;600&display=swap">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <style>
-:root{--paper:#F7F3EB;--ink:#332C2B;--muted:#6B5F5C;--olive:#788D70;--rose:#D9A0A0;--line:#DDD5C5;color-scheme:light}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 system-ui,sans-serif;padding:16px 16px calc(40px + env(safe-area-inset-bottom,0px))}
-.w{max-width:640px;margin:0 auto}h1{font:400 26px Georgia,serif;margin:0 0 14px}
-input,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;font:inherit;background:#fff;margin:4px 0 12px}
-label{font-size:14px;color:var(--muted)}.chk{display:flex;gap:10px;align-items:center;color:var(--ink);margin-bottom:10px}.chk input{width:auto;margin:0}
-button{padding:12px 18px;border:0;border-radius:999px;background:var(--rose);color:var(--ink);font:600 15px inherit;cursor:pointer}
-button.g{background:#fff;border:1px solid var(--line)}button.d{background:#fff;border:1px solid #c66;color:#a33}
-.card{background:#fff;border-radius:18px;padding:12px;margin-bottom:12px;display:flex;gap:12px;box-shadow:0 4px 14px -8px rgba(0,0,0,.3)}
-.card img,.ph{width:84px;height:104px;object-fit:cover;border-radius:12px;background:var(--line);flex:none}
-.card .i{flex:1;min-width:0}.card b{display:block}.tag{font-size:12px;color:var(--muted)}
-.acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.acts button{padding:8px 12px;font-size:13px}
-.bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-#form{background:#fff;border-radius:18px;padding:16px;margin-bottom:16px}.hide{display:none}#msg{color:#a33;min-height:20px}
+:root{--paper:#F7F3EB;--ink:#332C2B;--muted:#6B5F5C;--olive:#788D70;--sage:#9EAF96;--rose:#D9A0A0;--line:#DDD5C5;--card:#fff;color-scheme:light}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.5 Figtree,system-ui,sans-serif;padding:16px 16px calc(96px + env(safe-area-inset-bottom,0px))}
+.w{max-width:680px;margin:0 auto}
+h1,h2{font-family:Fraunces,Georgia,serif;font-weight:400;margin:0;letter-spacing:-.01em}
+h1{font-size:28px;line-height:1.1}
+h2{font-size:24px}
+.hide{display:none!important}
+label{display:block;font-size:14px;color:var(--muted);margin-top:14px}
+input,textarea,select{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:14px;font:inherit;background:#fff;color:var(--ink);margin-top:5px}
+input:focus,textarea:focus,select:focus{outline:3px solid rgba(120,141,112,.35);border-color:var(--olive)}
+button{font:600 15px Figtree,system-ui,sans-serif;padding:12px 18px;border:0;border-radius:999px;background:var(--rose);color:var(--ink);cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 8px 14px -8px rgba(217,160,160,.9);transition:transform .15s}
+button:active{transform:translateY(1px)}
+button:disabled{opacity:.6}
+button.g{background:#fff;border:1.5px solid var(--line);box-shadow:none}
+button.o{background:var(--olive);color:#fff;box-shadow:none}
+button.d{background:#fff;border:1.5px solid #cf8a8a;color:#a33;box-shadow:none}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.sub{color:var(--muted);font-size:14px}
+.login{background:var(--card);border-radius:28px;padding:24px 20px;box-shadow:0 18px 30px -18px rgba(36,28,30,.4);margin-top:8vh}
+.login button{width:100%;margin-top:18px}
+#msg{color:#a33;min-height:22px;margin:10px 0 0;font-size:14px}
+.chips{display:flex;gap:8px;overflow-x:auto;margin:14px -16px 0;padding:2px 16px 8px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;padding:9px 16px;font-size:14px;background:rgba(255,255,255,.7);border:1.5px solid var(--olive);box-shadow:none}
+.chip[aria-pressed="true"]{background:var(--olive);color:#fff}
+.chip.add{border-style:dashed;color:var(--olive)}
+.chip small{opacity:.75;font-weight:500;margin-left:4px}
+.tools{display:flex;gap:10px;align-items:center;margin-top:6px}
+.tools input{margin:0}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:8px 2px 12px;font-size:14px;color:var(--muted)}
+.meta a{color:var(--olive);font-weight:600}
+.meta button{padding:8px 14px;font-size:13px}
+.card{background:var(--card);border-radius:24px;padding:12px;margin-bottom:14px;display:flex;gap:12px;box-shadow:0 14px 26px -16px rgba(36,28,30,.4),0 2px 6px rgba(36,28,30,.06)}
+.card.dim{opacity:.62}
+.card img,.ph{width:92px;height:116px;object-fit:cover;border-radius:18px;background:linear-gradient(160deg,#F7F3EB,#EAD7D4);flex:none;display:grid;place-items:center;font-size:34px}
+.card .i{flex:1;min-width:0}
+.card b{display:block;font:400 19px/1.2 Fraunces,Georgia,serif;overflow-wrap:anywhere}
+.tag{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.pr{display:flex;align-items:center;gap:8px;margin:8px 0 6px}
+.pr input{width:120px;margin:0;padding:8px 10px;font-weight:600;border-radius:12px}
+.pr span{font-size:13px;color:var(--muted)}
+.st{display:flex;flex-wrap:wrap;gap:6px}
+.pill{font-size:12px;padding:3px 10px;border-radius:999px;background:#EDE7DA;color:var(--muted)}
+.pill.ok{background:#E1EADD;color:#4C6045}
+.pill.no{background:#F4DADA;color:#9B3B3B}
+.acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.acts button{padding:7px 12px;font-size:13px}
+.empty{text-align:center;color:var(--muted);padding:36px 10px}
+.fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:10;padding:15px 22px;font-size:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -3px 0 rgba(51,44,43,.12),0 12px 24px -6px rgba(51,44,43,.35)}
+.sheet{position:fixed;inset:0;background:rgba(51,44,43,.5);display:flex;align-items:flex-end;justify-content:center;z-index:30}
+.panel{background:var(--paper);width:100%;max-width:680px;max-height:94vh;max-height:94dvh;overflow:auto;border-radius:30px 30px 0 0;padding:20px 18px calc(24px + env(safe-area-inset-bottom,0px))}
+.panel .top{display:flex;justify-content:space-between;align-items:center}
+.panel .top button{padding:8px 14px;font-size:13px}
+.cc{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.cc button{padding:7px 14px;font-size:13px;background:#fff;border:1.5px solid var(--olive);box-shadow:none}
+.hint{font-size:13px;color:var(--muted);margin-top:4px}
+#pfmt{font-size:13px;color:var(--olive);min-height:18px;margin-top:4px}
+#pv{width:130px;aspect-ratio:3/4;object-fit:cover;border-radius:18px;display:block;margin:10px 0 6px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chk{display:flex;gap:12px;align-items:center;margin-top:14px;color:var(--ink);font-size:15px}
+.chk input{width:22px;height:22px;margin:0;accent-color:var(--olive)}
+.btns{display:flex;gap:10px;margin-top:22px}
+.btns .o{flex:1;padding:15px}
+#fm{color:#a33;margin:12px 0 0;font-size:14px;min-height:20px}
+#toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 20px;border-radius:999px;font-size:14px;z-index:50;opacity:0;pointer-events:none;transition:opacity .25s;max-width:90vw;text-align:center}
+#toast.on{opacity:1}#toast.bad{background:#a33}
 </style></head><body><div class="w">
-<div id="login"><h1>Novaa Admin</h1>
-<label>Email</label><input id="em" type="email" autocomplete="username">
-<label>Parol</label><input id="pw" type="password" autocomplete="current-password">
-<button id="go">Kirish</button><p id="msg"></p></div>
+
+<div id="login" class="login">
+<h1>Novaa Admin</h1><div class="sub">Gul do‘koni katalogini boshqarish</div>
+<label for="em">Email</label><input id="em" type="email" autocomplete="username">
+<label for="pw">Parol</label><input id="pw" type="password" autocomplete="current-password">
+<button id="go" class="o">Kirish</button><p id="msg"></p>
+</div>
+
 <div id="app" class="hide">
-<div class="bar"><h1>Buketlar</h1><div><button id="new">+ Yangi</button> <button class="g" id="out">Chiqish</button></div></div>
-<div id="form" class="hide">
-<label>Nomi</label><input id="n"><label>Tavsif</label><textarea id="d" rows="2"></textarea>
-<label>Narxi (so‘m, faqat raqam)</label><input id="p" type="number" inputmode="numeric">
-<label>Rasm</label><input id="f" type="file" accept="image/*"><img id="pv" class="hide" style="width:120px;border-radius:12px;margin-bottom:12px">
-<label>Tartib raqami (kichigi birinchi)</label><input id="s" type="number" value="0">
-<div class="chk"><input id="ins" type="checkbox" checked><span>Mavjud (o‘chirilsa “Hozir mavjud emas” chiqadi)</span></div>
-<div class="chk"><input id="act" type="checkbox" checked><span>Saytda ko‘rinsin</span></div>
-<button id="save">Saqlash</button> <button class="g" id="cancel">Bekor</button><p id="fm"></p></div>
-<div id="list"></div></div></div>
+ <div class="bar"><div><h1>Katalog</h1><div class="sub" id="count"></div></div><button class="g" id="out">Chiqish</button></div>
+ <div class="tools"><input id="q" type="search" placeholder="Nomi bo‘yicha qidirish…" aria-label="Qidirish"></div>
+ <div class="chips" id="chips"></div>
+ <div class="meta"><a href="index.html" target="_blank" rel="noopener">Saytni ko‘rish ↗</a><button class="g hide" id="ren">Bo‘lim nomini o‘zgartirish</button></div>
+ <div id="list"></div>
+ <button class="fab" id="new">+ Yangi mahsulot</button>
+</div>
+</div>
+
+<div id="sheet" class="sheet hide" role="dialog" aria-modal="true">
+ <div class="panel">
+  <div class="top"><h2 id="ft">Yangi mahsulot</h2><button class="g" id="cancel">Yopish</button></div>
+
+  <label for="n">Nomi</label><input id="n" autocomplete="off">
+  <label for="d">Tavsif (ixtiyoriy)</label><textarea id="d" rows="2"></textarea>
+
+  <label for="c">Bo‘lim (katalog)</label>
+  <input id="c" list="cl" autocomplete="off" placeholder="Masalan: Buketlar">
+  <datalist id="cl"></datalist>
+  <div class="cc" id="cc"></div>
+  <div class="hint">Yangi nom yozsangiz — saytda yangi katalog (tugma) paydo bo‘ladi.</div>
+
+  <div class="two">
+   <div><label for="p">Narxi (so‘m)</label><input id="p" type="number" inputmode="numeric" min="0"></div>
+   <div><label for="u">Narx nimaga</label><select id="u"><option>so‘m</option><option>so‘m / dona</option><option>so‘m / to‘plam</option></select></div>
+  </div>
+  <div id="pfmt"></div>
+
+  <label for="f">Rasm</label>
+  <input id="f" type="file" accept="image/*">
+  <img id="pv" class="hide" alt="">
+  <button class="g hide" id="rmimg" type="button" style="padding:7px 14px;font-size:13px">Rasmni olib tashlash</button>
+
+  <div class="chk"><input id="ins" type="checkbox" checked><label for="ins" style="margin:0;color:var(--ink)">Mavjud (o‘chirilsa “Hozir mavjud emas” chiqadi)</label></div>
+  <div class="chk"><input id="act" type="checkbox" checked><label for="act" style="margin:0;color:var(--ink)">Saytda ko‘rinsin</label></div>
+
+  <p id="fm"></p>
+  <div class="btns"><button class="o" id="save">Saqlash</button></div>
+ </div>
+</div>
+<div id="toast"></div>
+
 <script>
-var SUPABASE_URL="https://dxbiirdaqzcrggauuhkp.supabase.co",SUPABASE_KEY="sb_publishable_dNz6wAemrqDSO2l_ZlHh9A_RHqavPhE";
-var $=function(i){return document.getElementById(i)},editId=null,cur="",rows=[],sb=null;
+var SUPABASE_URL="SHU_YERGA_URL",SUPABASE_KEY="SHU_YERGA_ANON_KEY";
+var $=function(i){return document.getElementById(i)};
+var DEF="Buketlar",rows=[],vis=[],sb=null,editId=null,curImg="",filter="Barchasi",query="",unitTouched=false,tt=null;
+
 try{sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY)}catch(e){$("msg").textContent="Supabase URL/kalit noto‘g‘ri qo‘yilgan yoki internet yo‘q: "+e.message}
+
 function esc(x){return String(x==null?"":x).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function money(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g," ")}
+function catOf(p){return p.category||DEF}
+function unitOf(p){return p.unit||"so‘m"}
+function toast(m,bad){var t=$("toast");t.textContent=m;t.className="on"+(bad?" bad":"");clearTimeout(tt);tt=setTimeout(function(){t.className=""},2600)}
+function dbErr(e){var m=(e&&e.message)||String(e);if(/category|unit/.test(m)&&/column|schema/.test(m))m="Bazada “category” va “unit” ustunlari yo‘q. Avval supabase-setup.sql ni Supabase’da ishga tushiring.";return m}
+
+/* ---------- Kirish ---------- */
 function show(a){$("login").classList.toggle("hide",a);$("app").classList.toggle("hide",!a);if(a)load()}
 if(sb)sb.auth.getSession().then(function(r){show(!!r.data.session)}).catch(function(e){$("msg").textContent="Ulanishda xato: "+e.message});
-$("go").onclick=function(){sb.auth.signInWithPassword({email:$("em").value.trim(),password:$("pw").value}).then(function(r){if(r.error)$("msg").textContent="Xato: "+r.error.message;else show(true)})};
-$("out").onclick=function(){sb.auth.signOut().then(function(){show(false)})};
-function load(){sb.from("bouquets").select("*").order("sort_order").order("id").then(function(r){rows=r.data||[];
-$("list").innerHTML=rows.map(function(p){return '<div class="card">'+(p.image_url?'<img src="'+esc(p.image_url)+'">':'<div class="ph"></div>')+'<div class="i"><b>'+esc(p.name)+'</b>'+p.price.toLocaleString("ru-RU")+' so‘m<div class="tag">'+(p.active?"Saytda bor":"Yashirin")+' · '+(p.in_stock?"mavjud":"tugagan")+'</div><div class="acts"><button class="g" onclick="edit('+p.id+')">Tahrirlash</button><button class="g" onclick="tog('+p.id+',\'in_stock\')">'+(p.in_stock?"Tugadi":"Mavjud")+'</button><button class="d" onclick="del('+p.id+')">O‘chirish</button></div></div></div>'}).join("")||"<p>Hali buket yo‘q</p>"})}
-function tog(id,k){var p=rows.find(function(x){return x.id==id}),u={};u[k]=!p[k];sb.from("bouquets").update(u).eq("id",id).then(load)}
-function del(id){if(!confirm("O‘chirilsinmi?"))return;sb.from("bouquets").delete().eq("id",id).then(load)}
-function open_(p){editId=p?p.id:null;cur=p?p.image_url:"";$("n").value=p?p.name:"";$("d").value=p?p.description:"";$("p").value=p?p.price:"";$("s").value=p?p.sort_order:rows.length+1;$("ins").checked=p?p.in_stock:true;$("act").checked=p?p.active:true;$("f").value="";$("pv").src=cur;$("pv").classList.toggle("hide",!cur);$("fm").textContent="";$("form").classList.remove("hide");scrollTo(0,0)}
-function edit(id){open_(rows.find(function(x){return x.id==id}))}
-$("new").onclick=function(){open_(null)};$("cancel").onclick=function(){$("form").classList.add("hide")};
-function shrink(file){return new Promise(function(ok){var im=new Image();im.onload=function(){var s=Math.min(1,1000/im.width),c=document.createElement("canvas");c.width=im.width*s;c.height=im.height*s;c.getContext("2d").drawImage(im,0,0,c.width,c.height);c.toBlob(ok,"image/jpeg",.85)};im.src=URL.createObjectURL(file)})}
-$("save").onclick=async function(){
- var name=$("n").value.trim(),price=parseInt($("p").value,10);
- if(!name||isNaN(price)){$("fm").textContent="Nom va narxni to‘ldiring";return}
- $("save").disabled=true;$("fm").textContent="Saqlanmoqda…";var url=cur;
- try{var f=$("f").files[0];
-  if(f){var b=await shrink(f),path=Date.now()+".jpg",u=await sb.storage.from("bouquets").upload(path,b,{contentType:"image/jpeg"});if(u.error)throw u.error;url=sb.storage.from("bouquets").getPublicUrl(path).data.publicUrl}
-  var row={name:name,description:$("d").value.trim(),price:price,image_url:url,sort_order:parseInt($("s").value,10)||0,in_stock:$("ins").checked,active:$("act").checked};
-  var r=editId?await sb.from("bouquets").update(row).eq("id",editId):await sb.from("bouquets").insert(row);if(r.error)throw r.error;
-  $("form").classList.add("hide");load()
- }catch(e){$("fm").textContent="Xatolik: "+(e.message||e)}
- $("save").disabled=false};
+$("go").onclick=function(){if(!sb)return;$("msg").textContent="";sb.auth.signInWithPassword({email:$("em").value.trim(),password:$("pw").value}).then(function(r){if(r.error)$("msg").textContent="Xato: "+r.error.message;else show(true)})};
 $("pw").addEventListener("keydown",function(e){if(e.key==="Enter")$("go").click()});
+$("out").onclick=function(){sb.auth.signOut().then(function(){show(false)})};
+
+/* ---------- Ro'yxat ---------- */
+function load(){
+ sb.from("bouquets").select("*").order("sort_order").order("id").then(function(r){
+  if(r.error){toast("Yuklashda xato: "+dbErr(r.error),true);return}
+  rows=r.data||[];render();
+ });
+}
+function cats(){var o=[];rows.forEach(function(p){var c=catOf(p);if(o.indexOf(c)<0)o.push(c)});return o}
+function render(){
+ var C=cats();if(filter!=="Barchasi"&&C.indexOf(filter)<0)filter="Barchasi";
+ $("chips").innerHTML='<button class="chip" data-c="Barchasi" aria-pressed="'+(filter==="Barchasi")+'">Barchasi<small>'+rows.length+'</small></button>'+
+  C.map(function(c){var n=rows.filter(function(p){return catOf(p)===c}).length;return '<button class="chip" data-c="'+esc(c)+'" aria-pressed="'+(c===filter)+'">'+esc(c)+'<small>'+n+'</small></button>'}).join("")+
+  '<button class="chip add" data-add="1">+ Yangi bo‘lim</button>';
+ $("ren").classList.toggle("hide",filter==="Barchasi");
+ vis=rows.filter(function(p){return (filter==="Barchasi"||catOf(p)===filter)&&(!query||((p.name||"")+" "+(p.description||"")).toLowerCase().indexOf(query)>=0)});
+ var hid=rows.filter(function(p){return !p.active}).length;
+ $("count").textContent=rows.length+" ta mahsulot"+(hid?" · "+hid+" tasi yashirin":"");
+ $("list").innerHTML=vis.map(function(p,i){
+  var img=p.image_url?'<img src="'+esc(p.image_url)+'" alt="" loading="lazy">':'<div class="ph">🌸</div>';
+  var mv=query?'':'<button class="g" data-a="up"'+(i===0?' disabled':'')+' aria-label="Yuqoriga">↑</button><button class="g" data-a="dn"'+(i===vis.length-1?' disabled':'')+' aria-label="Pastga">↓</button>';
+  return '<div class="card'+(p.active?'':' dim')+'" data-id="'+p.id+'">'+img+'<div class="i"><b>'+esc(p.name)+'</b><div class="tag">'+esc(catOf(p))+'</div>'+
+   '<div class="pr"><input class="qp" type="number" inputmode="numeric" min="0" value="'+esc(p.price)+'" aria-label="Narx"><span>'+esc(unitOf(p))+'</span></div>'+
+   '<div class="st"><span class="pill '+(p.active?'ok':'')+'">'+(p.active?'Saytda bor':'Yashirin')+'</span><span class="pill '+(p.in_stock?'ok':'no')+'">'+(p.in_stock?'Mavjud':'Tugagan')+'</span></div>'+
+   '<div class="acts"><button class="g" data-a="edit">Tahrirlash</button><button class="g" data-a="stock">'+(p.in_stock?'Tugadi':'Mavjud')+'</button><button class="g" data-a="vis">'+(p.active?'Yashirish':'Ko‘rsatish')+'</button>'+mv+'<button class="g" data-a="dup">Nusxa</button><button class="d" data-a="del">O‘chirish</button></div>'+
+   '</div></div>';
+ }).join("")||'<div class="empty">'+(rows.length?'Hech narsa topilmadi':'Hali mahsulot yo‘q. “+ Yangi mahsulot” tugmasini bosing.')+'</div>';
+}
+function find(id){return rows.find(function(x){return x.id==id})}
+function upd(id,obj,msg){sb.from("bouquets").update(obj).eq("id",id).then(function(r){if(r.error)toast("Xato: "+dbErr(r.error),true);else if(msg)toast(msg);load()})}
+
+$("chips").addEventListener("click",function(e){
+ var b=e.target.closest(".chip");if(!b)return;
+ if(b.dataset.add){var n=(prompt("Yangi bo‘lim nomi (masalan: Orkideya)")||"").trim();if(n)openForm(null,n);return}
+ filter=b.dataset.c;render();
+});
+$("q").addEventListener("input",function(){query=this.value.trim().toLowerCase();render()});
+$("ren").onclick=function(){
+ var old=filter,n=(prompt("Bo‘limning yangi nomi:",old)||"").trim();if(!n||n===old)return;
+ var ids=rows.filter(function(p){return catOf(p)===old}).map(function(p){return p.id});
+ sb.from("bouquets").update({category:n}).in("id",ids).then(function(r){if(r.error)toast("Xato: "+dbErr(r.error),true);else{filter=n;toast("Bo‘lim nomi o‘zgardi")}load()});
+};
+
+$("list").addEventListener("click",function(e){
+ var b=e.target.closest("[data-a]");if(!b)return;var c=b.closest(".card"),id=c.dataset.id,p=find(id);if(!p)return;
+ var a=b.dataset.a;
+ if(a==="edit")openForm(p);
+ else if(a==="stock")upd(id,{in_stock:!p.in_stock},p.in_stock?"Tugagan deb belgilandi":"Mavjud deb belgilandi");
+ else if(a==="vis")upd(id,{active:!p.active},p.active?"Saytdan yashirildi":"Saytda ko‘rinadi");
+ else if(a==="up"||a==="dn")move(id,a==="up"?-1:1);
+ else if(a==="dup")dup(p);
+ else if(a==="del"){if(confirm("“"+p.name+"” o‘chirilsinmi?"))sb.from("bouquets").delete().eq("id",id).then(function(r){if(r.error)toast("Xato: "+dbErr(r.error),true);else toast("O‘chirildi");load()})}
+});
+/* Narxni to'g'ridan-to'g'ri kartada o'zgartirish */
+$("list").addEventListener("change",function(e){
+ if(!e.target.classList.contains("qp"))return;
+ var id=e.target.closest(".card").dataset.id,v=parseInt(e.target.value,10);
+ if(isNaN(v)||v<0){toast("Narxni raqam bilan yozing",true);load();return}
+ upd(id,{price:v},"Narx saqlandi: "+money(v)+" so‘m");
+});
+function move(id,dir){
+ var i=vis.findIndex(function(x){return x.id==id}),o=vis[i+dir];if(!o)return;
+ var arr=rows.slice(),a=arr.findIndex(function(x){return x.id==id}),b=arr.findIndex(function(x){return x.id==o.id}),t=arr[a];arr[a]=arr[b];arr[b]=t;
+ var jobs=[];arr.forEach(function(p,k){if(p.sort_order!==k+1)jobs.push(sb.from("bouquets").update({sort_order:k+1}).eq("id",p.id))});
+ Promise.all(jobs).then(load);
+}
+function dup(p){
+ var max=rows.reduce(function(m,x){return Math.max(m,x.sort_order||0)},0);
+ var row={name:p.name+" (nusxa)",description:p.description||"",price:p.price,image_url:p.image_url||"",category:catOf(p),unit:unitOf(p),in_stock:p.in_stock,active:p.active,sort_order:max+1};
+ sb.from("bouquets").insert(row).select().single().then(function(r){
+  if(r.error){toast("Xato: "+dbErr(r.error),true);return}
+  rows.push(r.data);render();openForm(r.data);load();
+ });
+}
+
+/* ---------- Forma ---------- */
+function setUnit(v){var has=Array.prototype.some.call($("u").options,function(o){return o.value===v});if(!has)$("u").add(new Option(v,v));$("u").value=v}
+function fillCats(){
+ var C=cats();
+ $("cl").innerHTML=C.map(function(c){return '<option value="'+esc(c)+'">'}).join("");
+ $("cc").innerHTML=C.map(function(c){return '<button type="button" data-c="'+esc(c)+'">'+esc(c)+'</button>'}).join("");
+}
+function autoUnit(){
+ if(editId||unitTouched)return;
+ var c=$("c").value.trim(),last=null;rows.forEach(function(p){if(catOf(p)===c)last=p});
+ if(last)setUnit(unitOf(last));
+}
+function showPv(){$("pv").classList.toggle("hide",!$("pv").src||!$("pv").getAttribute("src"));$("rmimg").classList.toggle("hide",$("pv").classList.contains("hide"))}
+function openForm(p,preCat){
+ editId=p?p.id:null;curImg=p?(p.image_url||""):"";unitTouched=false;
+ $("ft").textContent=p?"Tahrirlash":"Yangi mahsulot";
+ $("n").value=p?p.name:"";$("d").value=p?(p.description||""):"";$("p").value=p?p.price:"";
+ $("c").value=p?catOf(p):(preCat||(filter!=="Barchasi"?filter:DEF));
+ setUnit(p?unitOf(p):"so‘m");
+ $("ins").checked=p?!!p.in_stock:true;$("act").checked=p?!!p.active:true;
+ $("f").value="";if(curImg)$("pv").src=curImg;else $("pv").removeAttribute("src");showPv();
+ $("fm").textContent="";fillCats();autoUnit();pfmt();
+ $("sheet").classList.remove("hide");$("sheet").querySelector(".panel").scrollTop=0;
+ if(!p)setTimeout(function(){$("n").focus()},50);
+}
+function closeForm(){$("sheet").classList.add("hide")}
+function pfmt(){var v=parseInt($("p").value,10);$("pfmt").textContent=isNaN(v)?"":"Saytda: "+money(v)+" "+$("u").value}
+$("new").onclick=function(){openForm(null)};
+$("cancel").onclick=closeForm;
+$("sheet").addEventListener("click",function(e){if(e.target===$("sheet"))closeForm()});
+document.addEventListener("keydown",function(e){if(e.key==="Escape")closeForm()});
+$("cc").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;$("c").value=b.dataset.c;autoUnit()});
+$("c").addEventListener("change",autoUnit);
+$("p").addEventListener("input",pfmt);
+$("u").addEventListener("change",function(){unitTouched=true;pfmt()});
+$("f").addEventListener("change",function(){var f=this.files[0];if(f){$("pv").src=URL.createObjectURL(f);showPv()}});
+$("rmimg").onclick=function(){curImg="";$("f").value="";$("pv").removeAttribute("src");showPv()};
+
+function shrink(file){return new Promise(function(ok,no){
+ var im=new Image();
+ im.onload=function(){var s=Math.min(1,600/im.width),c=document.createElement("canvas");c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext("2d").drawImage(im,0,0,c.width,c.height);c.toBlob(ok,"image/jpeg",.8)};
+ im.onerror=function(){no(new Error("Rasmni o‘qib bo‘lmadi"))};
+ im.src=URL.createObjectURL(file);
+})}
+
+$("save").onclick=async function(){
+ var name=$("n").value.trim(),cat=$("c").value.trim()||DEF,price=parseInt($("p").value,10);
+ if(!name){$("fm").textContent="Nomini yozing";return}
+ if(isNaN(price)||price<0){$("fm").textContent="Narxni raqam bilan yozing";return}
+ $("save").disabled=true;$("fm").textContent="Saqlanmoqda…";var url=curImg;
+ try{
+  var f=$("f").files[0];
+  if(f){var b=await shrink(f),path=Date.now()+".jpg",u=await sb.storage.from("bouquets").upload(path,b,{contentType:"image/jpeg",cacheControl:"31536000"});if(u.error)throw u.error;url=sb.storage.from("bouquets").getPublicUrl(path).data.publicUrl}
+  var row={name:name,description:$("d").value.trim(),price:price,image_url:url,category:cat,unit:$("u").value,in_stock:$("ins").checked,active:$("act").checked};
+  if(!editId)row.sort_order=rows.reduce(function(m,x){return Math.max(m,x.sort_order||0)},0)+1;
+  var r=editId?await sb.from("bouquets").update(row).eq("id",editId):await sb.from("bouquets").insert(row);
+  if(r.error)throw r.error;
+  if(filter!=="Barchasi")filter=cat;
+  closeForm();toast("Saqlandi ✓");load();
+ }catch(e){$("fm").textContent="Xatolik: "+dbErr(e)}
+ $("save").disabled=false;
+};
 </script></body></html>
